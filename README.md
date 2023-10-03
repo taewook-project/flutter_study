@@ -1,6 +1,6 @@
 # test123
 
-A new Flutter project created with FlutLab - https://flutlab.io
+study - chatapp
 
 ## Getting Started
 
