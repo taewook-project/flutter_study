@@ -1,10 +1,10 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 import '../config/palette.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'chat_screen.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class LoginSignupScreen extends StatefulWidget {
   const LoginSignupScreen({Key? key}) : super(key: key);
@@ -21,7 +21,6 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
   String userPassword = '';
   final _authentication = FirebaseAuth.instance;
   bool showSpinner = false;
-  bool show = false;
 
   void _tryValidation() {
     final isValid = _formkey.currentState!.validate();
@@ -245,7 +244,7 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
                                     validator: (value) {
                                       if (value!.isEmpty ||
                                           !value.contains('@')) {
-                                        return 'Please enter at least 4 characters';
+                                        return 'Please @ put';
                                       }
                                       return null;
                                     },
@@ -257,11 +256,11 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
                                       userEmail = value;
                                     },
                                     decoration: InputDecoration(
-                                      prefixIcon: Icon(
+                                      prefixIcon: const Icon(
                                         Icons.email,
                                         color: Palette.iconColor,
                                       ),
-                                      enabledBorder: OutlineInputBorder(
+                                      enabledBorder: const OutlineInputBorder(
                                         borderSide: BorderSide(
                                           color: Palette.textColor1,
                                         ),
@@ -304,7 +303,7 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
                                       userPassword = value;
                                     },
                                     decoration: InputDecoration(
-                                      prefixIcon: Icon(
+                                      prefixIcon: const Icon(
                                         Icons.lock,
                                         color: Palette.iconColor,
                                       ),
@@ -348,7 +347,7 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
                                     validator: (value) {
                                       if (value!.isEmpty ||
                                           !value.contains('@')) {
-                                        return 'Please enter at least 4 characters';
+                                        return 'Please @ put';
                                       }
                                       return null;
                                     },
@@ -468,6 +467,14 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
                               email: userEmail,
                               password: userPassword,
                             );
+                            await FirebaseFirestore.instance
+                                .collection('user')
+                                .doc(newUser.user!.uid)
+                                .set({
+                              'userName': userName,
+                              'email': userEmail,
+                            });
+
                             if (newUser.user != null) {
                               Navigator.push(
                                 context,
@@ -482,6 +489,7 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
                               });
                             }
                           } catch (e) {
+                            showSpinner = false;
                             if (e == 'weak-password') {
                               print('The password provided is too weak.');
                             } else if (e == 'email-already-in-use') {
@@ -508,14 +516,14 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
                                     email: userEmail, password: userPassword);
                             print(newUser.user);
                             if (newUser.user != null) {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) {
-                                    return ChatScreen();
-                                  },
-                                ),
-                              );
+                              // Navigator.push(
+                              //   context,
+                              //   MaterialPageRoute(
+                              //     builder: (context) {
+                              //       return ChatScreen();
+                              //     },
+                              //   ),
+                              // );
                             }
                             setState(() {
                               showSpinner = false;

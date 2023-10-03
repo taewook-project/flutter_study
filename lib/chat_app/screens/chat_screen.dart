@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:test123/chat_app/chatting/message.dart';
+import 'package:test123/chat_app/chatting/new_message.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({Key? key}) : super(key: key);
@@ -13,7 +15,6 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
   final _authentication = FirebaseAuth.instance;
   User? loggedUser;
-  int price = 2000;
 
   @override
   void initState() {
@@ -37,51 +38,30 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Chat screen'),
-        actions: [
-          IconButton(
-            icon: Icon(
-              Icons.exit_to_app_sharp,
-              color: Colors.white,
+        appBar: AppBar(
+          title: Text('Chat screen'),
+          actions: [
+            IconButton(
+              icon: Icon(
+                Icons.exit_to_app_sharp,
+                color: Colors.white,
+              ),
+              onPressed: () {
+                _authentication.signOut();
+                // Navigator.pop(context);
+              },
             ),
-            onPressed: () {
-              _authentication.signOut();
-              Navigator.pop(context);
-            },
+          ],
+        ),
+        body: Container(
+          child: Column(
+            children: [
+              Expanded(
+                child: Messages(),
+              ),
+              NewMessage(),
+            ],
           ),
-        ],
-      ),
-      body: StreamBuilder(
-        stream: FirebaseFirestore.instance
-            .collection('chats/Jqr9gImtzIXfblD5dPiw/message')
-            .snapshots(),
-        builder: (BuildContext context,
-            AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-          final docs = snapshot.data!.docs;
-          return ListView.builder(
-            itemCount: docs.length,
-            itemBuilder: (context, Index) {
-              return Container(
-                padding: EdgeInsets.all(8.0),
-                child: Text(
-                  docs[Index]['text'],
-                  style: TextStyle(fontSize: 20.0),
-                ),
-              );
-            },
-          );
-        },
-      ),
-    );
-  }
-
-  Stream<int> addStreamValue() {
-    return Stream<int>.periodic(Duration(seconds: 1), (count) => price + count);
+        ));
   }
 }
