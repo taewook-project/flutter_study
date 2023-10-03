@@ -5,6 +5,7 @@ import 'chat_app/screens/main_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  var a = 3;
   Constants constants = Constants();
   await Firebase.initializeApp(
       options: FirebaseOptions(
