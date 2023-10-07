@@ -1,13 +1,34 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class Addimage extends StatefulWidget {
-  const Addimage({Key? key}) : super(key: key);
+  const Addimage(this.addimageFunc, {Key? key}) : super(key: key);
+
+  final Function(File pickedImage) addimageFunc;
 
   @override
   State<Addimage> createState() => _AddimageState();
 }
 
 class _AddimageState extends State<Addimage> {
+  File? pickedImage;
+
+  void _pickImage() async {
+    final imagePicker = ImagePicker();
+    final pickedImageFile = await imagePicker.pickImage(
+      source: ImageSource.camera,
+      imageQuality: 50,
+      maxHeight: 150,
+    );
+    setState(() {
+      if (pickedImageFile != null) {
+        pickedImage = File(pickedImageFile.path);
+      }
+    });
+    widget.addimageFunc(pickedImage!);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -19,12 +40,16 @@ class _AddimageState extends State<Addimage> {
           CircleAvatar(
             radius: 40,
             backgroundColor: Colors.blue,
+            backgroundImage:
+                pickedImage != null ? FileImage(pickedImage!) : null,
           ),
           SizedBox(
             height: 10,
           ),
           OutlinedButton.icon(
-            onPressed: () {},
+            onPressed: () {
+              _pickImage();
+            },
             icon: Icon(Icons.image),
             label: Text('Add icon'),
           ),
