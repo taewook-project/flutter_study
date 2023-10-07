@@ -21,6 +21,7 @@ dev_dependencies:
   firebase_storage: ^11.2.7
   flutter_secure_storage: ^9.0.0
   modal_progress_hud_nsn: ^0.4.0
+  flutter_chat_bubble: ^2.0.2
 
 flutter:
   uses-material-design: true

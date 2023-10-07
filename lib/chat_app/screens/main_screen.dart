@@ -1,5 +1,7 @@
+import 'dart:html';
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:test123/chat_app/screens/add_image.dart';
 import '../config/palette.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'chat_screen.dart';
@@ -27,6 +29,18 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
     if (isValid) {
       _formkey.currentState!.save();
     }
+  }
+
+  void showALert(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          backgroundColor: Colors.white,
+          child: Addimage(),
+        );
+      },
+    );
   }
 
   @override
@@ -164,19 +178,35 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
                               },
                               child: Column(
                                 children: [
-                                  Text(
-                                    'SIGNUP',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                      color: isSignupScreen
-                                          ? Palette.activeColor
-                                          : Palette.textColor1,
-                                    ),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        'SIGNUP',
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                          color: isSignupScreen
+                                              ? Palette.activeColor
+                                              : Palette.textColor1,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 15,
+                                      ),
+                                      GestureDetector(
+                                        onTap: () {
+                                          showALert(context);
+                                        },
+                                        child: Icon(Icons.image,
+                                            color: isSignupScreen
+                                                ? Colors.cyan
+                                                : Colors.grey[300]),
+                                      ),
+                                    ],
                                   ),
                                   if (isSignupScreen)
                                     Container(
-                                      margin: EdgeInsets.only(top: 5),
+                                      margin: EdgeInsets.fromLTRB(0, 3, 35, 0),
                                       height: 2,
                                       width: 55,
                                       color: Colors.orange,
